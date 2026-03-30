@@ -1,262 +1,147 @@
-// Hero Canvas Animation - Animated Grid with Particles
-class HeroAnimation {
-    constructor() {
-        this.canvas = document.getElementById('heroCanvas');
-        this.ctx = this.canvas.getContext('2d');
-        this.particles = [];
-        this.gridLines = [];
-        this.mouse = { x: 0, y: 0 };
-        this.particleCount = 50;
+// ===========================
+// HERO CANVAS ANIMATION
+// ===========================
+(function () {
+  const canvas = document.getElementById('hero-canvas');
+  const ctx = canvas.getContext('2d');
 
-        this.init();
-        this.setupEventListeners();
+  let W, H, particles, animId;
+  const BLUE = '59, 130, 246';
+  const PARTICLE_COUNT = 80;
+
+  function resize() {
+    W = canvas.width = window.innerWidth;
+    H = canvas.height = window.innerHeight;
+  }
+
+  function createParticle() {
+    return {
+      x: Math.random() * W,
+      y: Math.random() * H,
+      vx: (Math.random() - 0.5) * 0.4,
+      vy: (Math.random() - 0.5) * 0.4,
+      r: Math.random() * 1.5 + 0.5,
+      alpha: Math.random() * 0.5 + 0.2,
+    };
+  }
+
+  function init() {
+    resize();
+    particles = Array.from({ length: PARTICLE_COUNT }, createParticle);
+  }
+
+  function drawGrid() {
+    const step = 80;
+    ctx.strokeStyle = `rgba(${BLUE}, 0.04)`;
+    ctx.lineWidth = 1;
+    for (let x = 0; x < W; x += step) {
+      ctx.beginPath();
+      ctx.moveTo(x, 0);
+      ctx.lineTo(x, H);
+      ctx.stroke();
     }
-
-    init() {
-        this.resize();
-        this.createParticles();
-        this.createGridLines();
-        this.animate();
+    for (let y = 0; y < H; y += step) {
+      ctx.beginPath();
+      ctx.moveTo(0, y);
+      ctx.lineTo(W, y);
+      ctx.stroke();
     }
+  }
 
-    resize() {
-        this.canvas.width = window.innerWidth;
-        this.canvas.height = window.innerHeight;
-    }
-
-    setupEventListeners() {
-        window.addEventListener('resize', () => {
-            this.resize();
-            this.createGridLines();
-        });
-
-        window.addEventListener('mousemove', (e) => {
-            this.mouse.x = e.clientX;
-            this.mouse.y = e.clientY;
-        });
-    }
-
-    createParticles() {
-        this.particles = [];
-        for (let i = 0; i < this.particleCount; i++) {
-            this.particles.push({
-                x: Math.random() * this.canvas.width,
-                y: Math.random() * this.canvas.height,
-                vx: (Math.random() - 0.5) * 0.5,
-                vy: (Math.random() - 0.5) * 0.5,
-                radius: Math.random() * 2 + 1,
-                alpha: Math.random() * 0.5 + 0.2
-            });
+  function drawConnections() {
+    const maxDist = 140;
+    for (let i = 0; i < particles.length; i++) {
+      for (let j = i + 1; j < particles.length; j++) {
+        const dx = particles[i].x - particles[j].x;
+        const dy = particles[i].y - particles[j].y;
+        const dist = Math.sqrt(dx * dx + dy * dy);
+        if (dist < maxDist) {
+          const alpha = (1 - dist / maxDist) * 0.15;
+          ctx.strokeStyle = `rgba(${BLUE}, ${alpha})`;
+          ctx.lineWidth = 1;
+          ctx.beginPath();
+          ctx.moveTo(particles[i].x, particles[i].y);
+          ctx.lineTo(particles[j].x, particles[j].y);
+          ctx.stroke();
         }
+      }
     }
+  }
 
-    createGridLines() {
-        this.gridLines = [];
-        const gridSpacing = 80;
+  function tick() {
+    ctx.clearRect(0, 0, W, H);
 
-        // Vertical lines
-        for (let x = 0; x < this.canvas.width; x += gridSpacing) {
-            this.gridLines.push({
-                type: 'vertical',
-                position: x,
-                offset: Math.random() * Math.PI * 2
-            });
+    // Gradient overlay
+    const grad = ctx.createRadialGradient(W / 2, H / 2, 0, W / 2, H / 2, Math.max(W, H) * 0.7);
+    grad.addColorStop(0, `rgba(${BLUE}, 0.04)`);
+    grad.addColorStop(1, 'transparent');
+    ctx.fillStyle = grad;
+    ctx.fillRect(0, 0, W, H);
+
+    drawGrid();
+    drawConnections();
+
+    // Particles
+    particles.forEach(p => {
+      p.x += p.vx;
+      p.y += p.vy;
+      if (p.x < 0) p.x = W;
+      if (p.x > W) p.x = 0;
+      if (p.y < 0) p.y = H;
+      if (p.y > H) p.y = 0;
+
+      ctx.beginPath();
+      ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
+      ctx.fillStyle = `rgba(${BLUE}, ${p.alpha})`;
+      ctx.fill();
+    });
+
+    animId = requestAnimationFrame(tick);
+  }
+
+  window.addEventListener('resize', () => {
+    cancelAnimationFrame(animId);
+    init();
+    tick();
+  });
+
+  init();
+  tick();
+})();
+
+// ===========================
+// FADE-IN ON SCROLL
+// ===========================
+(function () {
+  const els = document.querySelectorAll('.fade-in');
+
+  const observer = new IntersectionObserver(
+    (entries) => {
+      entries.forEach((entry, i) => {
+        if (entry.isIntersecting) {
+          setTimeout(() => {
+            entry.target.classList.add('visible');
+          }, i * 80);
+          observer.unobserve(entry.target);
         }
+      });
+    },
+    { threshold: 0.12 }
+  );
 
-        // Horizontal lines
-        for (let y = 0; y < this.canvas.height; y += gridSpacing) {
-            this.gridLines.push({
-                type: 'horizontal',
-                position: y,
-                offset: Math.random() * Math.PI * 2
-            });
-        }
+  els.forEach(el => observer.observe(el));
+})();
+
+// ===========================
+// NAV SCROLL EFFECT
+// ===========================
+(function () {
+  const nav = document.querySelector('.nav');
+  window.addEventListener('scroll', () => {
+    if (window.scrollY > 20) {
+      nav.style.borderBottomColor = 'rgba(59,130,246,0.2)';
+    } else {
+      nav.style.borderBottomColor = 'rgba(59,130,246,0.15)';
     }
-
-    drawGrid() {
-        const time = Date.now() * 0.001;
-
-        this.gridLines.forEach(line => {
-            const wave = Math.sin(time + line.offset) * 0.3 + 0.3;
-            this.ctx.strokeStyle = `rgba(59, 130, 246, ${wave * 0.1})`;
-            this.ctx.lineWidth = 1;
-            this.ctx.beginPath();
-
-            if (line.type === 'vertical') {
-                this.ctx.moveTo(line.position, 0);
-                this.ctx.lineTo(line.position, this.canvas.height);
-            } else {
-                this.ctx.moveTo(0, line.position);
-                this.ctx.lineTo(this.canvas.width, line.position);
-            }
-
-            this.ctx.stroke();
-        });
-    }
-
-    drawParticles() {
-        this.particles.forEach(particle => {
-            // Update position
-            particle.x += particle.vx;
-            particle.y += particle.vy;
-
-            // Bounce off edges
-            if (particle.x < 0 || particle.x > this.canvas.width) particle.vx *= -1;
-            if (particle.y < 0 || particle.y > this.canvas.height) particle.vy *= -1;
-
-            // Mouse interaction
-            const dx = this.mouse.x - particle.x;
-            const dy = this.mouse.y - particle.y;
-            const distance = Math.sqrt(dx * dx + dy * dy);
-
-            if (distance < 150) {
-                const force = (150 - distance) / 150;
-                particle.x -= dx * force * 0.01;
-                particle.y -= dy * force * 0.01;
-            }
-
-            // Draw particle
-            this.ctx.beginPath();
-            this.ctx.arc(particle.x, particle.y, particle.radius, 0, Math.PI * 2);
-            this.ctx.fillStyle = `rgba(59, 130, 246, ${particle.alpha})`;
-            this.ctx.fill();
-
-            // Draw connections
-            this.particles.forEach(otherParticle => {
-                const dx = particle.x - otherParticle.x;
-                const dy = particle.y - otherParticle.y;
-                const distance = Math.sqrt(dx * dx + dy * dy);
-
-                if (distance < 120) {
-                    this.ctx.beginPath();
-                    this.ctx.moveTo(particle.x, particle.y);
-                    this.ctx.lineTo(otherParticle.x, otherParticle.y);
-                    const alpha = (1 - distance / 120) * 0.2;
-                    this.ctx.strokeStyle = `rgba(59, 130, 246, ${alpha})`;
-                    this.ctx.lineWidth = 1;
-                    this.ctx.stroke();
-                }
-            });
-        });
-    }
-
-    animate() {
-        this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
-
-        this.drawGrid();
-        this.drawParticles();
-
-        requestAnimationFrame(() => this.animate());
-    }
-}
-
-// Scroll Animations
-class ScrollAnimations {
-    constructor() {
-        this.elements = document.querySelectorAll('.fade-in');
-        this.init();
-    }
-
-    init() {
-        this.observe();
-        window.addEventListener('scroll', () => this.checkVisibility());
-        this.checkVisibility(); // Check on load
-    }
-
-    observe() {
-        const options = {
-            threshold: 0.1,
-            rootMargin: '0px 0px -50px 0px'
-        };
-
-        const observer = new IntersectionObserver((entries) => {
-            entries.forEach(entry => {
-                if (entry.isIntersecting) {
-                    entry.target.classList.add('visible');
-                }
-            });
-        }, options);
-
-        this.elements.forEach(element => {
-            observer.observe(element);
-        });
-    }
-
-    checkVisibility() {
-        this.elements.forEach(element => {
-            const rect = element.getBoundingClientRect();
-            const windowHeight = window.innerHeight;
-
-            if (rect.top < windowHeight * 0.9) {
-                element.classList.add('visible');
-            }
-        });
-    }
-}
-
-// Smooth Scroll
-class SmoothScroll {
-    constructor() {
-        this.init();
-    }
-
-    init() {
-        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-            anchor.addEventListener('click', (e) => {
-                const href = anchor.getAttribute('href');
-
-                // Skip if it's just "#"
-                if (href === '#') return;
-
-                e.preventDefault();
-
-                const target = document.querySelector(href);
-                if (target) {
-                    const offsetTop = target.offsetTop - 80; // Account for fixed nav
-
-                    window.scrollTo({
-                        top: offsetTop,
-                        behavior: 'smooth'
-                    });
-                }
-            });
-        });
-    }
-}
-
-// Nav Background on Scroll
-class NavController {
-    constructor() {
-        this.nav = document.querySelector('.nav');
-        this.init();
-    }
-
-    init() {
-        window.addEventListener('scroll', () => {
-            if (window.scrollY > 50) {
-                this.nav.style.background = 'rgba(10, 10, 15, 0.95)';
-            } else {
-                this.nav.style.background = 'rgba(10, 10, 15, 0.8)';
-            }
-        });
-    }
-}
-
-// Initialize everything when DOM is loaded
-document.addEventListener('DOMContentLoaded', () => {
-    new HeroAnimation();
-    new ScrollAnimations();
-    new SmoothScroll();
-    new NavController();
-});
-
-// Add a subtle parallax effect to hero content
-window.addEventListener('scroll', () => {
-    const scrolled = window.scrollY;
-    const heroContent = document.querySelector('.hero-content');
-
-    if (heroContent && scrolled < window.innerHeight) {
-        heroContent.style.transform = `translateY(${scrolled * 0.3}px)`;
-        heroContent.style.opacity = 1 - (scrolled / window.innerHeight) * 0.8;
-    }
-});
+  });
+})();
