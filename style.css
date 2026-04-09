@@ -294,6 +294,10 @@ a { color: inherit; text-decoration: none; }
   line-height: 1.85;
 }
 
+.about-cta {
+  margin-top: 32px;
+}
+
 .about-stats {
   display: flex;
   flex-direction: column;
