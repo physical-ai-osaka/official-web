@@ -560,6 +560,55 @@ a { color: inherit; text-decoration: none; }
 }
 
 /* ===========================
+   FAQ
+   =========================== */
+.faq-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 20px;
+  margin-top: 32px;
+  max-width: 800px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.faq-item {
+  background: var(--bg-3);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 24px;
+  transition: all 0.2s;
+}
+
+.faq-item:hover {
+  border-color: var(--blue);
+}
+
+.faq-question {
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: #fff;
+  margin-bottom: 12px;
+}
+
+.faq-answer {
+  font-size: 0.95rem;
+  color: var(--text-muted);
+  line-height: 1.7;
+  margin: 0;
+}
+
+.faq-answer a {
+  color: var(--blue);
+  border-bottom: 1px solid transparent;
+  transition: border-color 0.2s;
+}
+
+.faq-answer a:hover {
+  border-bottom-color: var(--blue);
+}
+
+/* ===========================
    JOIN
    =========================== */
 .join-flow {
@@ -604,12 +653,19 @@ a { color: inherit; text-decoration: none; }
   margin: 0 8px;
 }
 
+.join-note {
+  text-align: center;
+  font-size: 0.85rem;
+  color: var(--text-muted);
+  margin-top: 24px;
+}
+
 .join-actions {
   display: flex;
   gap: 16px;
   justify-content: center;
   flex-wrap: wrap;
-  margin-top: 8px;
+  margin-top: 24px;
 }
 
 @media (max-width: 480px) {
