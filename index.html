@@ -19,6 +19,7 @@
         <li><a href="#about">About</a></li>
         <li><a href="#who">こんな人</a></li>
         <li><a href="#what-we-do">活動</a></li>
+        <li><a href="#events">イベント</a></li>
         <li><a href="#join" class="btn btn-sm">参加する</a></li>
       </ul>
       <button class="nav-toggle" aria-label="メニューを開く">
@@ -120,11 +121,61 @@
     </div>
   </section>
 
+  <!-- UPCOMING EVENTS -->
+  <section class="section section-events" id="events">
+    <div class="container">
+      <div class="section-label fade-in">Upcoming Events</div>
+      <h2 class="section-title fade-in">次のイベント</h2>
+      <div class="events-grid">
+        <!-- イベントがない場合の表示 -->
+        <div class="event-card event-card-empty fade-in">
+          <div class="event-icon">📅</div>
+          <h3>次回イベントは近日公開予定！</h3>
+          <p>イベント情報はコミュニティメンバーに優先的にお知らせします。</p>
+          <a href="#join" class="btn btn-ghost">参加して最新情報を受け取る</a>
+        </div>
+
+        <!-- イベントがある場合の例（コメントアウト） -->
+        <!--
+        <div class="event-card fade-in">
+          <div class="event-date">2026.04.15 <span>(土)</span></div>
+          <h3 class="event-title">第1回 Physical AI勉強会</h3>
+          <p class="event-desc">Physical AIの基礎と最新動向について学びます。初心者歓迎！</p>
+          <div class="event-meta">
+            <span>📍 大阪大学 吹田キャンパス</span>
+            <span>⏰ 14:00 - 16:00</span>
+          </div>
+          <a href="https://connpass.com/event/xxxxx/" class="btn btn-primary" target="_blank">Connpassで申し込む</a>
+        </div>
+        -->
+      </div>
+    </div>
+  </section>
+
   <!-- JOIN -->
   <section class="section section-join" id="join">
     <div class="container">
       <h2 class="section-title fade-in">コミュニティに参加しよう</h2>
       <p class="section-desc fade-in">Physical AIの可能性を一緒に探求しませんか。</p>
+
+      <!-- 参加後の流れ -->
+      <div class="join-flow fade-in">
+        <div class="flow-step">
+          <div class="flow-num">1</div>
+          <div class="flow-text">参加申請</div>
+        </div>
+        <div class="flow-arrow">→</div>
+        <div class="flow-step">
+          <div class="flow-num">2</div>
+          <div class="flow-text">Discord招待</div>
+        </div>
+        <div class="flow-arrow">→</div>
+        <div class="flow-step">
+          <div class="flow-num">3</div>
+          <div class="flow-text">イベント参加</div>
+        </div>
+      </div>
+
       <div class="join-actions fade-in">
         <a href="https://docs.google.com/forms/d/1zZDXEd1WPPMod-JehoyhtmslazJKjXT3JckYeypo8zw/viewform" class="btn btn-primary" target="_blank">参加申請する</a>
         <a href="https://github.com/physical-ai-osaka" class="btn btn-ghost" target="_blank">GitHub を見る</a>
@@ -141,6 +192,7 @@
         <div class="footer-links">
           <a href="https://github.com/physical-ai-osaka" target="_blank">GitHub</a>
           <a href="mailto:physical.ai.osaka@gmail.com">Contact</a>
+          <a href="mailto:physical.ai.osaka@gmail.com?subject=企業パートナーについて">企業の方へ</a>
         </div>
       </div>
     </div>
