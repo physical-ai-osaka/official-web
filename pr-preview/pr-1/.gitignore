@@ -1,9 +1,0 @@
-# Screenshots
-*.png
-
-# macOS
-.DS_Store
-
-# Editor
-.vscode/
-.idea/
