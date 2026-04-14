@@ -998,9 +998,9 @@ a { color: inherit; text-decoration: none; }
 }
 
 .timeline-year {
-  position: absolute;
-  left: 0;
-  top: 0;
+  position: relative;
+  display: inline-block;
+  margin-bottom: 12px;
   font-size: 0.85rem;
   font-weight: 600;
   color: var(--blue);
@@ -1009,7 +1009,6 @@ a { color: inherit; text-decoration: none; }
   border-radius: 6px;
   border: 1px solid var(--border);
   white-space: nowrap;
-  min-width: 120px;
   text-align: center;
 }
 
