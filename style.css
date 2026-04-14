@@ -720,6 +720,138 @@ a { color: inherit; text-decoration: none; }
 }
 
 /* ===========================
+   WHAT IS PHYSICAL AI
+   =========================== */
+.section-what-is {
+  background: var(--bg-2);
+}
+
+.what-is-content {
+  max-width: 900px;
+  margin: 0 auto;
+}
+
+.what-is-intro {
+  font-size: 1.15rem;
+  line-height: 1.8;
+  margin-bottom: 32px;
+  text-align: center;
+}
+
+.what-is-quote {
+  background: var(--blue-dim);
+  border-left: 4px solid var(--blue);
+  padding: 24px;
+  margin: 32px 0;
+  border-radius: var(--radius);
+}
+
+.what-is-quote p {
+  font-size: 1.05rem;
+  font-style: italic;
+  margin-bottom: 12px;
+  color: var(--text);
+}
+
+.what-is-quote cite {
+  font-size: 0.9rem;
+  color: var(--text-muted);
+  font-style: normal;
+}
+
+.what-is-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 24px;
+  margin: 40px 0;
+}
+
+.what-is-card {
+  background: var(--bg-3);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 24px;
+  transition: all 0.3s;
+}
+
+.what-is-card:hover {
+  border-color: var(--blue);
+  box-shadow: 0 0 20px var(--blue-glow);
+  transform: translateY(-4px);
+}
+
+.what-is-icon {
+  font-size: 2.5rem;
+  margin-bottom: 16px;
+}
+
+.what-is-card h3 {
+  font-size: 1.1rem;
+  margin-bottom: 8px;
+  color: var(--blue);
+}
+
+.what-is-card p {
+  font-size: 0.95rem;
+  color: var(--text-muted);
+  line-height: 1.6;
+}
+
+.what-is-market {
+  background: var(--bg-3);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 32px;
+  margin: 40px 0;
+}
+
+.what-is-market h3 {
+  font-size: 1.3rem;
+  margin-bottom: 16px;
+  color: var(--blue);
+}
+
+.what-is-market p {
+  font-size: 1rem;
+  line-height: 1.8;
+  margin-bottom: 12px;
+}
+
+.what-is-applications {
+  margin-top: 40px;
+}
+
+.what-is-applications h3 {
+  font-size: 1.3rem;
+  margin-bottom: 20px;
+  text-align: center;
+  color: var(--blue);
+}
+
+.application-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  justify-content: center;
+}
+
+.application-tag {
+  background: var(--blue-dim);
+  border: 1px solid var(--border);
+  color: var(--text);
+  padding: 8px 16px;
+  border-radius: 20px;
+  font-size: 0.9rem;
+  transition: all 0.3s;
+}
+
+.application-tag:hover {
+  background: var(--blue);
+  border-color: var(--blue);
+  transform: scale(1.05);
+}
+
+/* ===========================
    FADE-IN ANIMATION
    =========================== */
 .fade-in {
