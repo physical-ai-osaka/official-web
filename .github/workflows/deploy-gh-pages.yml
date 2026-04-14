@@ -1,0 +1,33 @@
+name: Deploy to GitHub Pages
+
+on:
+  push:
+    branches:
+      - main
+
+permissions:
+  contents: write
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Deploy to gh-pages root
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+
+          # gh-pagesブランチをチェックアウト（なければ作成）
+          git fetch origin gh-pages || git checkout --orphan gh-pages
+          git checkout gh-pages || git checkout --orphan gh-pages
+
+          # mainブランチの内容をルートにコピー
+          git checkout main -- index.html style.css main.js
+
+          # コミット＆プッシュ
+          git add index.html style.css main.js
+          git commit -m "Deploy from main branch" || echo "No changes to commit"
+          git push origin gh-pages
