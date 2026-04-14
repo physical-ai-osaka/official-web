@@ -1,0 +1,369 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="大阪大学を拠点とするPhysical AI人材を輩出するコミュニティ。学生・研究者・企業が一体となって、Physical AIの可能性を探求しています。" />
+  <title>阪大AIロボティクス研究会 | Physical AI Osaka</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Noto+Sans+JP:wght@300;400;500;600&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+  <!-- NAV -->
+  <nav class="nav">
+    <div class="nav-inner">
+      <a class="nav-logo" href="#">阪大AIロボティクス研究会</a>
+      <ul class="nav-links">
+        <li><a href="#what-is-physical-ai">Physical AI</a></li>
+        <li><a href="#about">About</a></li>
+        <li><a href="#who">こんな人</a></li>
+        <li><a href="#what-we-do">活動</a></li>
+        <li><a href="#events">イベント</a></li>
+        <li><a href="#faq">FAQ</a></li>
+        <li><a href="#join" class="btn btn-sm">参加する</a></li>
+      </ul>
+      <button class="nav-toggle" aria-label="メニューを開く">
+        <span></span>
+        <span></span>
+        <span></span>
+      </button>
+    </div>
+  </nav>
+
+  <!-- HERO -->
+  <section class="hero">
+    <canvas id="hero-canvas"></canvas>
+    <div class="hero-content">
+      <p class="hero-label">Osaka University — AI Robotics Community</p>
+      <h1 class="hero-title">
+        Physical AIの可能性を探求する
+      </h1>
+      <p class="hero-sub">Exploring the Potential of Physical AI Together</p>
+      <div class="hero-actions">
+        <a href="https://docs.google.com/forms/d/1zZDXEd1WPPMod-JehoyhtmslazJKjXT3JckYeypo8zw/viewform" class="btn btn-primary" target="_blank">コミュニティに参加する</a>
+        <a href="#about" class="btn btn-ghost">もっと詳しく</a>
+      </div>
+    </div>
+    <div class="hero-scroll"><span></span></div>
+  </section>
+
+  <!-- WHAT IS PHYSICAL AI -->
+  <section class="section section-physical-ai" id="what-is-physical-ai">
+    <div class="container">
+      <div class="section-label fade-in">What is Physical AI?</div>
+      <h2 class="section-title fade-in">Physical AIが描く未来</h2>
+
+      <!-- リード文 -->
+      <p class="physical-ai-intro fade-in">
+        Physical AIは、AIとロボティクスの融合により、
+        <strong>現実世界で知覚・推論・行動できるシステム</strong>を生み出します。<br>
+        10年後、私たちの日常はどう変わるのか——タイムラインで見てみましょう。
+      </p>
+
+      <!-- タイムライン -->
+      <div class="timeline">
+
+        <!-- 2026年（今） -->
+        <div class="timeline-item fade-in">
+          <div class="timeline-year">2026年（今）</div>
+          <h3>🚀 すでに始まっている未来</h3>
+          <ul class="timeline-list">
+            <li>工場でヒューマノイドロボットが働き始めた（BMW、Mercedes-Benz）</li>
+            <li>Tesla Optimus、Figure 01が実証実験中</li>
+            <li>言葉で指示できるロボット（VLAモデル）が登場</li>
+            <li>倉庫・物流でAMRが本格導入</li>
+          </ul>
+        </div>
+
+        <!-- 2031年（5年後） -->
+        <div class="timeline-item fade-in">
+          <div class="timeline-year">2031年（5年後）</div>
+          <h3>🏠 家庭にロボットがやってくる</h3>
+          <ul class="timeline-list">
+            <li>家庭用ヒューマノイドが一般販売開始（価格は車1台分くらい）</li>
+            <li>介護施設でロボットが日常的に高齢者をサポート</li>
+            <li>建設現場で人間とロボットが協働するのが当たり前に</li>
+            <li>農業の50%がロボット化（収穫・選別・パッキング）</li>
+            <li>レストランでロボットが調理・配膳を担当</li>
+          </ul>
+        </div>
+
+        <!-- 2036年（10年後） -->
+        <div class="timeline-item fade-in">
+          <div class="timeline-year">2036年（10年後）</div>
+          <h3>🌟 ロボットと暮らす日常</h3>
+          <ul class="timeline-list">
+            <li>一般家庭の30%がヒューマノイドロボットを所有</li>
+            <li>家事の大半（掃除・洗濯・料理）をロボットが担当</li>
+            <li>医療手術の80%がロボット支援で実施</li>
+            <li>自動運転＋配送ロボットで物流が完全自動化</li>
+            <li>火星探査・深海調査でPhysical AIが活躍</li>
+            <li><strong>「ロボットと暮らす」が当たり前の時代へ</strong></li>
+          </ul>
+        </div>
+
+      </div>
+
+      <!-- CTA -->
+      <div class="physical-ai-cta fade-in">
+        <p class="cta-text">
+          この未来を、一緒に作りませんか？<br>
+          Physical AIの可能性を探求し、社会実装を進めるコミュニティです。
+        </p>
+        <a href="#join" class="btn btn-primary">コミュニティに参加する</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ABOUT -->
+  <section class="section" id="about">
+    <div class="container">
+      <div class="section-label fade-in">About</div>
+      <h2 class="section-title fade-in">私たちについて</h2>
+      <div class="about-grid">
+        <div class="about-text fade-in">
+          <p>阪大AIロボティクス研究会は、大阪大学を拠点とする<strong>Physical AI人材を輩出する</strong>コミュニティです。Physical AIが日常に溶け込む未来を目指し、学生・研究者・企業が一体となって活動しています。</p>
+          <p>私たちは単なる研究の場ではありません。技術と課題が結びつく瞬間を共有し、アイデアを社会実装へとつなぐブリッジとして、産学連携のイベントや共同研究プロジェクトを通じて、Physical AIの社会実装を進めます。</p>
+          <p>学部生から博士課程、そして企業のエンジニアや研究者まで——バックグラウンドを超えてつながる場所です。</p>
+        </div>
+        <div class="about-stats fade-in">
+          <div class="stat">
+            <span class="stat-num">2026</span>
+            <span class="stat-label">設立</span>
+          </div>
+          <div class="stat">
+            <span class="stat-num">大阪</span>
+            <span class="stat-label">拠点</span>
+          </div>
+          <div class="stat">
+            <span class="stat-num">3人</span>
+            <span class="stat-label">参加者</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- WHAT IS PHYSICAL AI -->
+  <section class="section section-what-is" id="what-is-physical-ai">
+    <div class="container">
+      <div class="section-label fade-in">What is Physical AI?</div>
+      <h2 class="section-title fade-in">Physical AIとは？</h2>
+
+      <div class="what-is-content fade-in">
+        <p class="what-is-intro">Physical AIは、<strong>物理世界と相互作用するAIシステム</strong>のことです。画面やサーバーの中だけでなく、実際に物理世界で知覚・推論・行動するAIを指します。</p>
+
+        <blockquote class="what-is-quote">
+          <p>「真のPhysical AIとは、AIが重力・速度・距離・安全ロジックを理解し、その行動が物理世界に及ぼす結果に責任を持つシステムである」</p>
+          <cite>— Jensen Huang（NVIDIA CEO、CES 2026）</cite>
+        </blockquote>
+
+        <div class="what-is-grid">
+          <div class="what-is-card fade-in">
+            <div class="what-is-icon">🤖</div>
+            <h3>ロボティクス × AI</h3>
+            <p>ヒューマノイド、ロボットアーム、自律移動ロボットなど、物理世界で動くロボットにAIを搭載</p>
+          </div>
+
+          <div class="what-is-card fade-in">
+            <div class="what-is-icon">👁️</div>
+            <h3>Vision-Language-Action</h3>
+            <p>カメラで見て、言葉で理解して、モーターで動く——視覚・言語・行動を統合したVLAモデルが最前線</p>
+          </div>
+
+          <div class="what-is-card fade-in">
+            <div class="what-is-icon">📡</div>
+            <h3>センサー × ウェアラブル</h3>
+            <p>人間の行動を認識し、物理世界のデータを収集・分析して、リアルタイムに反応するシステム</p>
+          </div>
+
+          <div class="what-is-card fade-in">
+            <div class="what-is-icon">🏭</div>
+            <h3>産業オートメーション</h3>
+            <p>製造業・物流・農業など、$50兆規模の産業を自動化し、人手不足を解決する技術</p>
+          </div>
+        </div>
+
+        <div class="what-is-market fade-in">
+          <h3>📈 市場規模</h3>
+          <p>Physical AI市場は、<strong>2025年の$5B（50億ドル）</strong>から、<strong>2034-35年には$68B〜$84B（680億〜840億ドル）</strong>に成長すると予測されています（年成長率31%〜34%）。</p>
+          <p>2026年は「ロボティクスのChatGPTモーメント」と呼ばれ、Physical AIが実用化に向けて大きく加速しています。</p>
+        </div>
+
+        <div class="what-is-applications fade-in">
+          <h3>🌍 活用分野</h3>
+          <div class="application-list">
+            <span class="application-tag">🏥 ヘルスケア</span>
+            <span class="application-tag">🏭 製造業</span>
+            <span class="application-tag">📦 物流・倉庫</span>
+            <span class="application-tag">🏙️ スマートシティ</span>
+            <span class="application-tag">🌾 農業</span>
+            <span class="application-tag">🍔 レストラン</span>
+            <span class="application-tag">🚗 自動運転</span>
+            <span class="application-tag">🏠 スマートホーム</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- WHO WE WANT -->
+  <section class="section section-who" id="who">
+    <div class="container">
+      <div class="section-label fade-in">Who We Want</div>
+      <h2 class="section-title fade-in">こんな人、一緒にやりませんか？</h2>
+      <p class="section-desc fade-in">一つでも当てはまったら、ぜひ一緒にやりましょう！</p>
+      <div class="who-grid">
+        <div class="who-item fade-in">🤖 ロボットやAI、SF、ドラえもんが好き！</div>
+        <div class="who-item fade-in">🦾 ヒューマノイド触ってみたい</div>
+        <div class="who-item fade-in">🏠 自分の家にいつかヒューマノイドロボットを置きたいと思っている</div>
+        <div class="who-item fade-in">🔍 ロボットに興味がある</div>
+        <div class="who-item fade-in">📚 Physical AIを今のうちに勉強しておきたい</div>
+        <div class="who-item fade-in">🔬 Physical AIの今と未来、可能性を探求したい</div>
+        <div class="who-item fade-in">💪 自分の技術が通用するか試してみたい</div>
+        <div class="who-item fade-in">🌍 社会でPhysical AIの活用法を探求したい</div>
+        <div class="who-item fade-in">🚀 Physical AIを学んで将来起業したい</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- WHAT WE DO -->
+  <section class="section section-dark" id="what-we-do">
+    <div class="container">
+      <div class="section-label fade-in">What We Do</div>
+      <h2 class="section-title fade-in">活動内容</h2>
+      <div class="cards">
+        <div class="card fade-in">
+          <div class="card-num">01</div>
+          <h3>技術共有・勉強会</h3>
+          <p>Physical AIの最新技術を学びます。センサー、ロボット、ウェアラブルデバイスの技術紹介、論文読み会、実装ハンズオンなど、学びの場を提供します。</p>
+        </div>
+        <div class="card fade-in">
+          <div class="card-num">02</div>
+          <h3>プロジェクト開発</h3>
+          <p>日常の問題をPhysical AIで解決するアイデアを形にします。技術と課題が結びつく瞬間を共有し、メンバー同士でコラボしてプロダクト開発を進めます。</p>
+        </div>
+        <div class="card fade-in">
+          <div class="card-num">03</div>
+          <h3>産学連携・楽しいイベント</h3>
+          <p>企業の課題と学生のアイデアをマッチング。ヒューマノイド体験会、技術デモ会など、実際に体験できる楽しいイベントも定期開催します。</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- UPCOMING EVENTS -->
+  <section class="section section-events" id="events">
+    <div class="container">
+      <div class="section-label fade-in">Upcoming Events</div>
+      <h2 class="section-title fade-in">次のイベント</h2>
+      <div class="events-grid">
+        <!-- イベントがない場合の表示 -->
+        <div class="event-card event-card-empty fade-in">
+          <div class="event-icon">📅</div>
+          <h3>次回イベントは近日公開予定！</h3>
+          <p>イベント情報はコミュニティメンバーに優先的にお知らせします。</p>
+          <a href="#join" class="btn btn-ghost">参加して最新情報を受け取る</a>
+        </div>
+
+        <!-- イベントがある場合の例（コメントアウト） -->
+        <!--
+        <div class="event-card fade-in">
+          <div class="event-date">2026.04.15 <span>(土)</span></div>
+          <h3 class="event-title">第1回 Physical AI勉強会</h3>
+          <p class="event-desc">Physical AIの基礎と最新動向について学びます。初心者歓迎！</p>
+          <div class="event-meta">
+            <span>📍 大阪大学 吹田キャンパス</span>
+            <span>⏰ 14:00 - 16:00</span>
+          </div>
+          <a href="https://connpass.com/event/xxxxx/" class="btn btn-primary" target="_blank">Connpassで申し込む</a>
+        </div>
+        -->
+      </div>
+    </div>
+  </section>
+
+  <!-- FAQ -->
+  <section class="section section-faq" id="faq">
+    <div class="container">
+      <div class="section-label fade-in">FAQ</div>
+      <h2 class="section-title fade-in">よくある質問</h2>
+      <div class="faq-grid">
+        <div class="faq-item fade-in">
+          <h3 class="faq-question">技術力がなくても参加できますか？</h3>
+          <p class="faq-answer">もちろん！Physical AIに興味があれば、初心者でも大歓迎です。勉強会やハンズオンで一緒に学びましょう。</p>
+        </div>
+        <div class="faq-item fade-in">
+          <h3 class="faq-question">学部生でも参加できますか？</h3>
+          <p class="faq-answer">はい！学部生から博士課程まで、誰でも参加できます。Physical AIに興味があれば大歓迎です。</p>
+        </div>
+        <div class="faq-item fade-in">
+          <h3 class="faq-question">企業はどのように関わることができますか？</h3>
+          <p class="faq-answer">講演、インターンシップ募集、共同研究など、様々な形で協力できます。<a href="mailto:physical.ai.osaka@gmail.com?subject=企業パートナーについて">こちら</a>からお気軽にご連絡ください。</p>
+        </div>
+        <div class="faq-item fade-in">
+          <h3 class="faq-question">参加費用はかかりますか？</h3>
+          <p class="faq-answer">コミュニティへの参加は無料です。イベントによっては材料費等が必要な場合がありますが、事前にお知らせします。</p>
+        </div>
+        <div class="faq-item fade-in">
+          <h3 class="faq-question">どのくらいの頻度で活動していますか？</h3>
+          <p class="faq-answer">月1-2回程度のイベント開催を予定しています。Discordでは日常的に技術情報の共有やディスカッションが行われます。</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- JOIN -->
+  <section class="section section-join" id="join">
+    <div class="container">
+      <h2 class="section-title fade-in">コミュニティに参加しよう</h2>
+      <p class="section-desc fade-in">Physical AIの可能性を一緒に探求しませんか。</p>
+
+      <!-- 参加後の流れ -->
+      <div class="join-flow fade-in">
+        <div class="flow-step">
+          <div class="flow-num">1</div>
+          <div class="flow-text">参加申請フォーム送信</div>
+        </div>
+        <div class="flow-arrow">→</div>
+        <div class="flow-step">
+          <div class="flow-num">2</div>
+          <div class="flow-text">Discord招待メール受信</div>
+        </div>
+        <div class="flow-arrow">→</div>
+        <div class="flow-step">
+          <div class="flow-num">3</div>
+          <div class="flow-text">コミュニティ参加！</div>
+        </div>
+      </div>
+
+      <p class="join-note fade-in">※ フォーム送信後、24時間以内にDiscordの招待リンクをお送りします。</p>
+
+      <div class="join-actions fade-in">
+        <a href="https://docs.google.com/forms/d/1zZDXEd1WPPMod-JehoyhtmslazJKjXT3JckYeypo8zw/viewform" class="btn btn-primary" target="_blank">参加申請する</a>
+        <a href="https://github.com/physical-ai-osaka" class="btn btn-ghost" target="_blank">GitHub を見る</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer class="footer">
+    <div class="container">
+      <div class="footer-inner">
+        <span class="footer-logo">阪大AIロボティクス研究会</span>
+        <span class="footer-copy">© 2026 阪大AIロボティクス研究会. All rights reserved.</span>
+        <div class="footer-links">
+          <a href="https://github.com/physical-ai-osaka" target="_blank">GitHub</a>
+          <a href="mailto:physical.ai.osaka@gmail.com">Contact</a>
+          <a href="mailto:physical.ai.osaka@gmail.com?subject=企業パートナーについて">企業の方へ</a>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <script src="main.js"></script>
+</body>
+</html>
