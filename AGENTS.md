@@ -248,7 +248,7 @@ This is a starting point. Add your own conventions, style, and rules as you figu
 
 ## 🗂️ 慶のアクティブプロジェクト一覧
 
-_最終更新: 2026-04-14_
+_最終更新: 2026-05-01_
 
 ### 0. har-atlas 開発ルール
 - **作業ディレクトリ:** `~/har-atlas/`（mainブランチ）
@@ -305,12 +305,14 @@ _最終更新: 2026-04-14_
 - **今後:** OpenClaw + Qwen → Slack bot化（未着手）
 
 ### 4. Physical AIコミュニティ + Lyra Bot
+- **正式名称:** 阪大AIロボティクス研究会
 - **Discordサーバー:** GuildID `1479491408619372698`（lyra-discord account）
-- **現状:** Lyra Botの人格設定完了（SOUL.md作成済み）。Physical AIコミュニティへのBot招待作業中
 - **Lyra workspace:** `/Users/litchi/.openclaw/agents/lyra-agent/workspace/`（Lunaと分離済み）
-- **メンバー:** 2人 + Lyra（初期段階）
+- **メンバー:** 33人（2026-05-01現在）
 - **コンセプト:** AIとロボットと人間の共進化。Lyra = AIメンバー代表
-- **今後:** Bot招待完了後、Guild IDをconfigに追加、Lyraの役割（新メンバー歓迎・議論要約・プロジェクト追跡）を設定
+- **第1回キックオフイベント完了**（2026-04-30）
+  - 八木聡明先生講演「ヒューマノイドロボットとPhysical AIの最前線」
+  - 場所: 阪大吹田キャンパス Innovators Club Space
 
 ### 5. 研究（HAR / PerCom 2026）
 - **発表:** IEEE PerCom 2026（HARBench）採択済み
@@ -329,10 +331,14 @@ _最終更新: 2026-04-14_
 - **リポジトリ:** `github.com:SAIHomeTechnology/parse-app.git`
 - **スタック:** Next.js + Supabase + Stripe + Gemini API + dnd-kit
 - **概要:** 間取り図の2Dパース・背景除去・ドラッグ&ドロップUI付きSaaS
-- **慶の役割:** 開発 + インターン生（Yusei）のマネジメント
-- **メンバー:** 慶（開発・マネジメント）、Yusei（インターン）
+- **慶の役割:** 開発（単独）
+- **メンバー:** 慶（開発）
+- **Yuseiの状況:** 離脱済み（2026-05-02確認）
+- **直近タスク:**
+  - フォーム送信ツールにCSVアップロード機能追加（締切: 2026-05-02 19:00）
+  - ドメイン名変更
+  - ロボティクス建設の人が使えるように対応
 - **現状:** 開発中。SupabaseのDBスキーマ確認中（generationsテーブル等）
-- **メモ:** YuseiはSupabaseのuuid/created_at自動生成について質問していた（2026-03-10確認済み）
 
 ### 8. book-club-agent（読書サポートシステム）
 - **パス:** `~/.openclaw/workspace/book-club-agent/`
