@@ -73,11 +73,10 @@ Return ONLY a JSON array of objects with "phrase" and "translation" (in Japanese
     });
 
     // Refine timestamps using Whisper if videoId is provided
-    // Skip Whisper in production if Python is not available
-    const isProduction = process.env.NODE_ENV === 'production';
-    const skipWhisper = process.env.SKIP_WHISPER === 'true';
+    // NOTE: Whisper disabled in production - Python not available in serverless
+    const enableWhisper = process.env.NODE_ENV !== 'production';
 
-    if (videoId && !skipWhisper && !isProduction) {
+    if (videoId && enableWhisper) {
       try {
         console.log(`[SELECT-PHRASES] Calling refineBatch with ${selectedPhrases.length} phrases`);
 
@@ -101,20 +100,16 @@ Return ONLY a JSON array of objects with "phrase" and "translation" (in Japanese
       } catch (error) {
         console.error('Whisper refinement failed, using fuzzy match timestamps:', error);
       }
-    } else if (isProduction || skipWhisper) {
-      console.log('[SELECT-PHRASES] Skipping Whisper in production, using fuzzy timestamps');
     }
 
-    // Fallback: return first 20 phrases with placeholder audio
-    // In production (without Whisper), use a dummy audioUrl to prevent frontend errors
+    // Fallback: Return phrases with placeholder audio (production mode)
     const fallbackPhrases = selectedPhrases.slice(0, 20).map((p: any) => ({
       ...p,
-      // Use a placeholder that won't cause 404 errors
       audioUrl: '/api/audio/placeholder_unavailable.mp3',
-      confidence: 0.5 // Lower confidence without Whisper
+      confidence: 0.5
     }));
 
-    console.log(`[SELECT-PHRASES] Returning ${fallbackPhrases.length} phrases without Whisper (production mode)`);
+    console.log(`[SELECT-PHRASES] Returning ${fallbackPhrases.length} phrases (Whisper ${enableWhisper ? 'enabled' : 'disabled'})`);
     return NextResponse.json({ phrases: fallbackPhrases });
   } catch (error) {
     console.error('Phrase selection error:', error);
