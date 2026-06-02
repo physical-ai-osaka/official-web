@@ -80,15 +80,53 @@ export async function refineBatch(videoId: string, phrases: PhraseToRefine[]): P
           // Ignore cleanup errors
         }
 
+        console.log(`[REFINE] Batch processor exited with code ${code}`);
+        console.log(`[REFINE] Output length: ${output.length} bytes`);
+        console.log(`[REFINE] Error output length: ${errorOutput.length} bytes`);
+
+        if (errorOutput.length > 0) {
+          // Show last 1000 chars of error output for debugging
+          const errorPreview = errorOutput.slice(-1000);
+          console.log(`[REFINE] Error output (last 1000 chars):\n${errorPreview}`);
+        }
+
         if (code === 0 && output.trim()) {
           try {
-            const results = JSON.parse(output.trim());
+            // Extract the last line (JSON output) - ignore warnings/logs
+            const lines = output.trim().split('\n');
+            const jsonLine = lines[lines.length - 1];
+            const results = JSON.parse(jsonLine);
 
-            const refinedPhrases: PhraseToRefine[] = phrases.map((phrase, idx) => {
+            console.log(`[REFINE] Parsed ${results.length} results from batch processor`);
+            const successCount = results.filter((r: any) => r.result.success).length;
+            const failedCount = results.length - successCount;
+            console.log(`[REFINE] ${successCount} successful, ${failedCount} failed audio generations`);
+
+            // Show a sample of failed results for debugging
+            if (failedCount > 0) {
+              const failedSample = results.filter((r: any) => !r.result.success).slice(0, 3);
+              console.log(`[REFINE] Sample failed results:`, JSON.stringify(failedSample, null, 2));
+            }
+
+            // Ensure .cache/audio directory exists
+            const audioDir = path.join(process.cwd(), '.cache', 'audio');
+            await fs.mkdir(audioDir, { recursive: true });
+
+            const refinedPhrases: PhraseToRefine[] = await Promise.all(phrases.map(async (phrase, idx) => {
               const result = results.find((r: any) => r.index === idx);
 
               if (result && result.result.success && result.result.audioPath) {
                 const filename = result.result.audioPath.split('/').pop();
+                const destPath = path.join(audioDir, filename);
+
+                // Copy audio file from temp directory to .cache/audio
+                try {
+                  await fs.copyFile(result.result.audioPath, destPath);
+                  console.log(`[REFINE] Copied audio file: ${filename}`);
+                } catch (copyError) {
+                  console.error(`[REFINE] Failed to copy ${filename}:`, copyError);
+                }
+
                 return {
                   phrase: phrase.phrase,
                   translation: phrase.translation,
@@ -101,7 +139,7 @@ export async function refineBatch(videoId: string, phrases: PhraseToRefine[]): P
 
               // Fallback to original
               return phrase;
-            });
+            }));
 
             resolve(refinedPhrases);
           } catch (e) {
@@ -114,12 +152,12 @@ export async function refineBatch(videoId: string, phrases: PhraseToRefine[]): P
         }
       });
 
-      // Set timeout for entire batch (5 minutes for 30 phrases)
+      // Set timeout for entire batch (15 minutes for 30 phrases)
       setTimeout(() => {
         childProcess.kill();
-        console.error('Batch processor timeout');
+        console.error('Batch processor timeout after 15 minutes');
         resolve(phrases);
-      }, 300000);
+      }, 900000);
     } catch (e) {
       console.error('Batch processing error:', e);
       resolve(phrases);
