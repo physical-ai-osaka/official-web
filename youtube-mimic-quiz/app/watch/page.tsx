@@ -14,24 +14,20 @@ interface HistoryEntry {
   timestamp: number;
 }
 
-interface ChannelVideo {
+interface ProcessedVideo {
   videoId: string;
   title: string;
-  thumbnail: string;
-  publishedAt: string;
+  channel: string;
+  processedAt: string;
 }
 
 export default function WatchPage() {
-  const [videoUrl, setVideoUrl] = useState('');
   const [videoId, setVideoId] = useState('');
   const [loading, setLoading] = useState(false);
   const [englishTranscript, setEnglishTranscript] = useState<TranscriptLine[]>([]);
   const [japaneseTranscript, setJapaneseTranscript] = useState<TranscriptLine[]>([]);
   const [currentTime, setCurrentTime] = useState(0);
-  const [history, setHistory] = useState<HistoryEntry[]>([]);
-  const [supertfVideos, setSupertfVideos] = useState<ChannelVideo[]>([]);
-  const [aspenVideos, setAspenVideos] = useState<ChannelVideo[]>([]);
-  const [loadingChannels, setLoadingChannels] = useState(false);
+  const [processedVideos, setProcessedVideos] = useState<ProcessedVideo[]>([]);
   const playerRef = useRef<any>(null);
   const [player, setPlayer] = useState<any>(null);
 
@@ -45,39 +41,21 @@ export default function WatchPage() {
       console.log('YouTube IFrame API ready');
     };
 
-    loadHistory();
-    loadChannelVideos();
+    loadProcessedVideos();
   }, []);
 
-  const loadHistory = () => {
+  const loadProcessedVideos = async () => {
+    setLoading(true);
     try {
-      const saved = localStorage.getItem('watchHistory');
-      if (saved) {
-        setHistory(JSON.parse(saved));
+      const res = await fetch('/api/latest-videos');
+      if (res.ok) {
+        const data = await res.json();
+        setProcessedVideos(data.videos || []);
       }
     } catch (error) {
-      console.error('Failed to load history:', error);
-    }
-  };
-
-  const loadChannelVideos = async () => {
-    setLoadingChannels(true);
-    try {
-      const supertfRes = await fetch('/api/channel-videos?channel=supertf');
-      if (supertfRes.ok) {
-        const data = await supertfRes.json();
-        setSupertfVideos(data.videos || []);
-      }
-
-      const aspenRes = await fetch('/api/channel-videos?channel=aspen');
-      if (aspenRes.ok) {
-        const data = await aspenRes.json();
-        setAspenVideos(data.videos || []);
-      }
-    } catch (error) {
-      console.error('Failed to load channel videos:', error);
+      console.error('Failed to load processed videos:', error);
     } finally {
-      setLoadingChannels(false);
+      setLoading(false);
     }
   };
 
@@ -129,32 +107,7 @@ export default function WatchPage() {
     return null;
   };
 
-  const saveToHistory = (vId: string, title?: string) => {
-    try {
-      const history = JSON.parse(localStorage.getItem('watchHistory') || '[]');
-      const newEntry = {
-        videoId: vId,
-        videoTitle: title || `Video ${vId}`,
-        timestamp: Date.now(),
-      };
-
-      const filtered = history.filter((h: any) => h.videoId !== vId);
-      const updated = [newEntry, ...filtered].slice(0, 20);
-
-      localStorage.setItem('watchHistory', JSON.stringify(updated));
-    } catch (error) {
-      console.error('Failed to save history:', error);
-    }
-  };
-
-  const loadVideo = async (url?: string) => {
-    const urlToLoad = url || videoUrl;
-    const vId = extractVideoId(urlToLoad);
-    if (!vId) {
-      alert('Invalid YouTube URL');
-      return;
-    }
-
+  const loadVideoById = async (vId: string) => {
     setVideoId(vId);
     setLoading(true);
 
@@ -162,7 +115,7 @@ export default function WatchPage() {
       const res = await fetch('/api/dual-subtitles', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ videoUrl: urlToLoad }),
+        body: JSON.stringify({ videoUrl: `https://www.youtube.com/watch?v=${vId}` }),
       });
 
       if (!res.ok) {
@@ -172,19 +125,12 @@ export default function WatchPage() {
       const data = await res.json();
       setEnglishTranscript(data.english || []);
       setJapaneseTranscript(data.japanese || []);
-
-      saveToHistory(vId);
-      loadHistory();
     } catch (error) {
       console.error('Error loading video:', error);
       alert('Failed to load transcripts. Please try again.');
     } finally {
       setLoading(false);
     }
-  };
-
-  const loadVideoById = (vId: string) => {
-    loadVideo(`https://www.youtube.com/watch?v=${vId}`);
   };
 
   const getCurrentLine = (transcript: TranscriptLine[]) => {
@@ -222,48 +168,38 @@ export default function WatchPage() {
         {!videoId ? (
           <div className="space-y-6">
             <div className="bg-white rounded-lg shadow-lg p-8">
-              <h2 className="text-2xl font-semibold mb-4">動画を読み込む</h2>
+              <h2 className="text-2xl font-semibold mb-4">処理済み動画一覧</h2>
               <p className="text-gray-600 mb-4">
-                YouTube動画のURLを入力してください。英語字幕と日本語字幕を同時に表示します。
+                3時間ごとの自動処理で日本語字幕が生成された動画のみ表示されています。
               </p>
-              <input
-                type="text"
-                placeholder="https://www.youtube.com/watch?v=..."
-                value={videoUrl}
-                onChange={(e) => setVideoUrl(e.target.value)}
-                className="w-full p-3 border border-gray-300 rounded-lg mb-4"
-              />
-              <button
-                onClick={() => loadVideo()}
-                disabled={loading || !videoUrl}
-                className="w-full bg-indigo-600 text-white py-3 rounded-lg font-semibold hover:bg-indigo-700 disabled:bg-gray-400 disabled:cursor-not-allowed"
-              >
-                {loading ? '読み込み中...' : '動画を読み込む'}
-              </button>
-            </div>
 
-            {history.length > 0 && (
-              <div className="bg-white rounded-lg shadow-lg p-8">
-                <h3 className="text-xl font-semibold mb-4 text-gray-700">最近見た動画</h3>
-                <div className="space-y-2">
-                  {history.slice(0, 10).map((entry) => (
+              {loading ? (
+                <div className="text-center py-8">
+                  <p className="text-gray-500">読み込み中...</p>
+                </div>
+              ) : processedVideos.length > 0 ? (
+                <div className="space-y-3">
+                  {processedVideos.map((video) => (
                     <div
-                      key={entry.videoId}
-                      onClick={() => loadVideoById(entry.videoId)}
-                      className="p-3 bg-gray-50 hover:bg-indigo-50 rounded-lg cursor-pointer transition-all border border-gray-200 hover:border-indigo-300"
+                      key={video.videoId}
+                      onClick={() => loadVideoById(video.videoId)}
+                      className="p-4 bg-gray-50 hover:bg-indigo-50 rounded-lg cursor-pointer transition-all border border-gray-200 hover:border-indigo-300"
                     >
-                      <div className="flex gap-3 items-center">
+                      <div className="flex gap-4 items-start">
                         <img
-                          src={`https://img.youtube.com/vi/${entry.videoId}/default.jpg`}
-                          alt={entry.videoTitle}
-                          className="w-20 h-15 object-cover rounded"
+                          src={`https://img.youtube.com/vi/${video.videoId}/mqdefault.jpg`}
+                          alt={video.title}
+                          className="w-40 h-24 object-cover rounded flex-shrink-0"
                         />
                         <div className="flex-1 min-w-0">
-                          <div className="font-medium text-gray-800 truncate">
-                            {entry.videoTitle}
+                          <div className="font-medium text-gray-800 mb-1 line-clamp-2">
+                            {video.title}
                           </div>
                           <div className="text-sm text-gray-500">
-                            {new Date(entry.timestamp).toLocaleString('ja-JP', {
+                            チャンネル: {video.channel}
+                          </div>
+                          <div className="text-sm text-gray-500">
+                            処理日時: {new Date(video.processedAt).toLocaleString('ja-JP', {
                               month: 'numeric',
                               day: 'numeric',
                               hour: '2-digit',
@@ -275,66 +211,13 @@ export default function WatchPage() {
                     </div>
                   ))}
                 </div>
-              </div>
-            )}
-
-            {!loadingChannels && (supertfVideos.length > 0 || aspenVideos.length > 0) && (
-              <div className="space-y-6">
-                {supertfVideos.length > 0 && (
-                  <div className="bg-white rounded-lg shadow-lg p-8">
-                    <h3 className="text-xl font-semibold mb-4 text-gray-700">SuperTF - 最新動画</h3>
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                      {supertfVideos.slice(0, 6).map((video) => (
-                        <div
-                          key={video.videoId}
-                          onClick={() => loadVideoById(video.videoId)}
-                          className="p-3 bg-gray-50 hover:bg-indigo-50 rounded-lg cursor-pointer transition-all border border-gray-200 hover:border-indigo-300"
-                        >
-                          <img
-                            src={video.thumbnail}
-                            alt={video.title}
-                            className="w-full h-32 object-cover rounded mb-2"
-                          />
-                          <div className="font-medium text-gray-800 text-sm line-clamp-2">
-                            {video.title}
-                          </div>
-                          <div className="text-xs text-gray-500 mt-1">
-                            {new Date(video.publishedAt).toLocaleDateString('ja-JP')}
-                          </div>
-                        </div>
-                      ))}
-                    </div>
-                  </div>
-                )}
-
-                {aspenVideos.length > 0 && (
-                  <div className="bg-white rounded-lg shadow-lg p-8">
-                    <h3 className="text-xl font-semibold mb-4 text-gray-700">Aspen - 最新動画</h3>
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                      {aspenVideos.slice(0, 6).map((video) => (
-                        <div
-                          key={video.videoId}
-                          onClick={() => loadVideoById(video.videoId)}
-                          className="p-3 bg-gray-50 hover:bg-indigo-50 rounded-lg cursor-pointer transition-all border border-gray-200 hover:border-indigo-300"
-                        >
-                          <img
-                            src={video.thumbnail}
-                            alt={video.title}
-                            className="w-full h-32 object-cover rounded mb-2"
-                          />
-                          <div className="font-medium text-gray-800 text-sm line-clamp-2">
-                            {video.title}
-                          </div>
-                          <div className="text-xs text-gray-500 mt-1">
-                            {new Date(video.publishedAt).toLocaleDateString('ja-JP')}
-                          </div>
-                        </div>
-                      ))}
-                    </div>
-                  </div>
-                )}
-              </div>
-            )}
+              ) : (
+                <div className="text-center py-8">
+                  <p className="text-gray-500">処理済みの動画がまだありません。</p>
+                  <p className="text-gray-400 text-sm mt-2">3時間ごとに自動で新しい動画が処理されます。</p>
+                </div>
+              )}
+            </div>
           </div>
         ) : (
           <div className="space-y-6">
@@ -377,13 +260,12 @@ export default function WatchPage() {
             <button
               onClick={() => {
                 setVideoId('');
-                setVideoUrl('');
                 setEnglishTranscript([]);
                 setJapaneseTranscript([]);
               }}
               className="w-full bg-gray-200 text-gray-700 py-3 rounded-lg font-semibold hover:bg-gray-300"
             >
-              ← 別の動画を読み込む
+              ← 動画一覧に戻る
             </button>
           </div>
         )}
