@@ -343,24 +343,6 @@ export default function WatchPage() {
             </div>
 
             <div className="bg-white rounded-lg shadow-lg p-6">
-              <h3 className="text-xl font-bold mb-4 text-indigo-900">現在の字幕</h3>
-              <div className="space-y-4">
-                <div className="p-4 bg-blue-50 rounded-lg">
-                  <div className="text-sm text-gray-600 mb-1">English:</div>
-                  <div className="text-lg font-medium text-gray-800">
-                    {currentEnglish?.text || '—'}
-                  </div>
-                </div>
-                <div className="p-4 bg-green-50 rounded-lg">
-                  <div className="text-sm text-gray-600 mb-1">日本語:</div>
-                  <div className="text-lg font-medium text-gray-800">
-                    {currentJapanese?.text || '（日本語字幕なし）'}
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            <div className="bg-white rounded-lg shadow-lg p-6">
               <h3 className="text-xl font-bold mb-4 text-indigo-900">全字幕</h3>
               <div className="space-y-3 max-h-96 overflow-y-auto">
                 {englishTranscript.map((enLine, index) => {
