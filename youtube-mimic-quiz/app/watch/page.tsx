@@ -50,33 +50,7 @@ export default function WatchPage() {
       const res = await fetch('/api/latest-videos');
       if (res.ok) {
         const data = await res.json();
-        const videos = data.videos || [];
-
-        // Filter videos: only show those with cached Japanese subtitles
-        const videosWithCache = await Promise.all(
-          videos.map(async (video: ProcessedVideo) => {
-            try {
-              const cacheRes = await fetch('/api/dual-subtitles/check-cache', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ videoId: video.videoId }),
-              });
-
-              if (cacheRes.ok) {
-                const cacheData = await cacheRes.json();
-                return cacheData.hasJapanese ? video : null;
-              }
-              return null;
-            } catch (error) {
-              console.error(`Cache check failed for ${video.videoId}:`, error);
-              return null;
-            }
-          })
-        );
-
-        // Filter out null values
-        const filteredVideos = videosWithCache.filter((v): v is ProcessedVideo => v !== null);
-        setProcessedVideos(filteredVideos);
+        setProcessedVideos(data.videos || []);
       }
     } catch (error) {
       console.error('Failed to load processed videos:', error);
@@ -138,14 +112,14 @@ export default function WatchPage() {
     setLoading(true);
 
     try {
-      const res = await fetch('/api/dual-subtitles', {
+      const res = await fetch('/api/dual-subtitles/from-cache', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ videoUrl: `https://www.youtube.com/watch?v=${vId}` }),
+        body: JSON.stringify({ videoId: vId }),
       });
 
       if (!res.ok) {
-        throw new Error('Failed to fetch transcripts');
+        throw new Error('Failed to fetch transcripts from cache');
       }
 
       const data = await res.json();
