@@ -47,10 +47,20 @@ export default function WatchPage() {
   const loadProcessedVideos = async () => {
     setLoading(true);
     try {
-      const res = await fetch('/api/latest-videos');
+      // Load from subtitle cache instead of processed-videos.json
+      const res = await fetch('/api/cached-videos');
       if (res.ok) {
         const data = await res.json();
-        setProcessedVideos(data.videos || []);
+        // Filter only videos with Japanese subtitles
+        const videosWithJapanese = (data.videos || [])
+          .filter((v: any) => v.hasSubtitles)
+          .map((v: any) => ({
+            videoId: v.videoId,
+            title: v.videoTitle,
+            channel: v.channel || 'unknown',
+            processedAt: new Date(v.cachedAt).toISOString(),
+          }));
+        setProcessedVideos(videosWithJapanese);
       }
     } catch (error) {
       console.error('Failed to load processed videos:', error);
