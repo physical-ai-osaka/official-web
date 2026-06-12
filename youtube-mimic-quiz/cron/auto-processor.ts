@@ -44,7 +44,7 @@ async function processVideo(video: Video, channel: 'supertf' | 'aspen'): Promise
     const dualSubtitlesResponse = await fetch(`${API_BASE}/dual-subtitles`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ videoUrl }),
+      body: JSON.stringify({ videoUrl, allowTranslation: true }),
     });
 
     if (!dualSubtitlesResponse.ok) {

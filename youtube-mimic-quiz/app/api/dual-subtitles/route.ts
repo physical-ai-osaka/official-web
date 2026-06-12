@@ -50,8 +50,14 @@ async function translateSubtitles(subtitles: TranscriptItem[]): Promise<Transcri
         tgt_lang: 'jpn_Jpan'
       });
 
+      // Sanitize translation result (remove offset numbers and pipe characters)
+      let translatedText = result[0].translation_text;
+
+      // Remove patterns like "1028799|>>" from start of text
+      translatedText = translatedText.replace(/^\d+\|>>\s*/, '');
+
       translated.push({
-        text: result[0].translation_text,
+        text: translatedText,
         offset: item.offset,
         duration: item.duration
       });
@@ -72,7 +78,7 @@ async function translateSubtitles(subtitles: TranscriptItem[]): Promise<Transcri
 
 export async function POST(req: NextRequest) {
   try {
-    const { videoUrl } = await req.json();
+    const { videoUrl, allowTranslation = false } = await req.json();
 
     if (!videoUrl) {
       return NextResponse.json(
@@ -118,29 +124,59 @@ export async function POST(req: NextRequest) {
 
     // Try to fetch Japanese subtitles (optional)
     let japaneseSubtitles = null;
+    let translationInProgress = false;
+
     try {
       japaneseSubtitles = await YoutubeTranscript.fetchTranscript(videoId, {
         lang: 'ja',
       });
       console.log('[DUAL-SUBTITLES] Japanese subtitles found on YouTube');
     } catch (error) {
-      console.log('[DUAL-SUBTITLES] Japanese subtitles not available, translating with NLLB-200...');
-      // Translate English subtitles to Japanese
-      japaneseSubtitles = await translateSubtitles(englishSubtitles);
+      // Only allow translation if explicitly requested (from cron)
+      if (!allowTranslation) {
+        console.log('[DUAL-SUBTITLES] Japanese subtitles not available, translation not allowed');
+        return NextResponse.json(
+          { error: 'Japanese subtitles not available and translation not allowed' },
+          { status: 404 }
+        );
+      }
+
+      console.log('[DUAL-SUBTITLES] Japanese subtitles not available, will translate in background...');
+      translationInProgress = true;
+
+      // Start translation in background (non-blocking)
+      translateSubtitles(englishSubtitles)
+        .then(translated => {
+          const result = {
+            videoId,
+            english: englishSubtitles,
+            japanese: translated,
+          };
+          return fs.writeFile(cachePath, JSON.stringify(result, null, 2));
+        })
+        .then(() => {
+          console.log(`[DUAL-SUBTITLES] Background translation completed and cached: ${videoId}`);
+        })
+        .catch(err => {
+          console.error(`[DUAL-SUBTITLES] Background translation failed for ${videoId}:`, err);
+        });
     }
 
     const result = {
       videoId,
       english: englishSubtitles,
       japanese: japaneseSubtitles,
+      translationInProgress,
     };
 
-    // Save to cache
-    try {
-      await fs.writeFile(cachePath, JSON.stringify(result, null, 2));
-      console.log(`[DUAL-SUBTITLES] Saved to cache: ${cachePath}`);
-    } catch (e) {
-      console.error('[DUAL-SUBTITLES] Failed to save cache:', e);
+    // Save to cache immediately (with english only if translation in progress)
+    if (!translationInProgress) {
+      try {
+        await fs.writeFile(cachePath, JSON.stringify(result, null, 2));
+        console.log(`[DUAL-SUBTITLES] Saved to cache: ${cachePath}`);
+      } catch (e) {
+        console.error('[DUAL-SUBTITLES] Failed to save cache:', e);
+      }
     }
 
     return NextResponse.json(result);
