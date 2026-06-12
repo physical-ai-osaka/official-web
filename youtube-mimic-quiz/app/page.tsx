@@ -133,7 +133,33 @@ export default function Home() {
       if (res.ok) {
         const data = await res.json();
         console.log('Loaded videos data:', data);
-        const quizzes: SavedQuiz[] = data.videos.map((v: any) => ({
+        const videos = data.videos || [];
+
+        // Filter videos: only show those with cached Japanese subtitles
+        const videosWithCache = await Promise.all(
+          videos.map(async (v: any) => {
+            try {
+              const cacheRes = await fetch('/api/dual-subtitles/check-cache', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ videoId: v.videoId }),
+              });
+
+              if (cacheRes.ok) {
+                const cacheData = await cacheRes.json();
+                return cacheData.hasJapanese ? v : null;
+              }
+              return null;
+            } catch (error) {
+              console.error(`Cache check failed for ${v.videoId}:`, error);
+              return null;
+            }
+          })
+        );
+
+        // Filter out null values and map to SavedQuiz
+        const filteredVideos = videosWithCache.filter((v): v is any => v !== null);
+        const quizzes: SavedQuiz[] = filteredVideos.map((v: any) => ({
           videoId: v.videoId,
           videoTitle: v.title,
           phrases: [], // Phrases will be loaded on demand
